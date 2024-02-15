@@ -1,0 +1,14 @@
+/*--------------------------------------------------------------
+# Form Input Container
+--------------------------------------------------------------*/
+.form-box,.form-file{
+  width: 100%;
+  padding-left: 0.5rem;
+}
+
+.form-file{
+  padding-top: 0.5rem;
+  padding-left: 0.5rem;
+}
+
+
