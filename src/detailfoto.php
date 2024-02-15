@@ -261,7 +261,7 @@
               <div class="description">
                 <h2><?php echo $judul ?></h2> 
                 <p>Tanggal upload : <?php echo $tanggalunggah ?></p>
-                <p>Deskripsi : <?php echo $deskripsifoto ?> </p>
+                <p>Deskripsi : <?php echo $deskripsifoto ?> </p> 
                 
               </div>
             </div>
