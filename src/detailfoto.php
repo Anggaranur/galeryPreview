@@ -259,7 +259,7 @@
                 <img src="./assets/img/foto/<?php echo $lokasi_file ?>" class="img-fluid" alt="detail foto" style="border-radius:1.5rem;">
               </div>
               <div class="description">
-                <h2><?php echo $judul ?></h2>
+                <h2><?php echo $judul ?></h2> 
                 <p>Tanggal upload : <?php echo $tanggalunggah ?></p>
                 <p>Deskripsi : <?php echo $deskripsifoto ?> </p>
                 
