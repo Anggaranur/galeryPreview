@@ -184,6 +184,21 @@
     border-radius: 0.5rem;
     margin-left: 0.5rem;
   }
+
+  .comment-text {
+    overflow: hidden;
+    word-wrap: break-word;
+}
+
+.comment-body{
+  background-color: white;
+  padding:1rem;
+}
+ .comment-user{
+  background-color: lightslategray;
+  padding:1rem;
+  border-radius: 1rem;
+ }
   </style>
 
 </head>
@@ -193,7 +208,8 @@
    <?php
   
     include "koneksi.php";
-    
+    session_start();
+    $_SESSION['userid']=$userid;
    ?>
    <!-- ======= Header ======= -->
    <header id="header" class="header d-flex align-items-center fixed-top">
@@ -285,20 +301,57 @@
       </div>
     </section><!-- End Gallery Section -->
 
-     <!-- Comment Section  DOM by Anggara-->
-     <section id="comment" class="hidden">
-        <div class="container justify-content-center mt-5 border-left border-right">
-        <div class="d-flex justify-content-center pt-3 pb-2"> <input type="text" name="text" placeholder="+ Add a comment" class="form-control addtxt"> <input class="submit-comment" type="submit"></div>
-        <div class="d-flex justify-content-center py-2">
-            <div class="second py-2 px-2"> <span class="text1">Wow! That's Amazing!</span>
-                <div class="d-flex justify-content-between py-1 pt-2">
-                    <div><p class="text2">Angga</p></div>
-                    <div><span class="text3">3 Days ago</span></div>
+    <!-- Comment Section -->
+    <?php
+
+    // Query ke database untuk mendapatkan username berdasarkan user ID
+    // $query_user = mysqli_query($koneksi, "SELECT username FROM user WHERE userid = '$userid'");
+    // $data_user = mysqli_fetch_assoc($query_user);
+    // $username = $data_user['username'];
+
+    // Tampilkan komentar bersama dengan username dan tanggal
+    ?>
+    <section id="comment" class="container py-5 hidden" class="comment">
+        <!-- Add Comment Form -->
+        <form class="add-comment-form mb-4" action="tambahkomentar.php" method="POST">
+            <div class="input-group">
+                <!-- <input type="date" style="border:none; background-color:white;"> -->
+                <input type="hidden" name="userid" value="<?php echo $userid;?>">
+                <input type="hidden" name="fotoid" value="<?php echo $fotoid;?>">
+                <input type="text" name="isikomentar" class="form-control" placeholder="Add a comment" aria-label="Add a comment" aria-describedby="button-addon2">
+                <button class="btn btn-primary" type="submit" id="button-addon2">Kirim</button>
+            </div>
+        </form>
+        <!-- End Add Comment Form -->
+
+        <!-- Comment List -->
+        <div class="comment-list">
+            <!-- Sample Comment -->
+            <div class="comment">
+                <div class="comment-body">
+                    <div class="comment-user">
+
+                    <div name='isi-komentar'>
+                      <?php
+                      $komen = mysqli_query($koneksi, "select*from komentarfoto k JOIN user u ON k.userid=u.userid where fotoid='$fotoid'");
+                      while ($data = mysqli_fetch_array($komen)) {
+                      ?>
+                        <span class="comment-author"> User : <?php echo $username; ?>
+                        <span class="comment-date"><?php echo isset($data['tanggalkomentar']) ? $data['tanggalkomentar'] : date('Y-m-d'); ?></span>
+                        <p class="comment-text mt-4"><?php echo isset($data['isikomentar']) ? $data['isikomentar'] : ''; ?></p>
+                      <?php }?>
+                    </div>
+                    </div>
                 </div>
             </div>
+            <!-- End Sample Comment -->
+
+            <!-- You can dynamically append new comments here using JavaScript -->
         </div>
+        <!-- End Comment List -->
     </section>
-    <!-- Comment Section -->
+    <!-- End Comment Section -->
+
 
   </main><!-- End #main -->
 

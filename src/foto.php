@@ -102,6 +102,17 @@
       session_start();
       include "koneksi.php";
       $userid = $_SESSION['userid'];
+
+      // Ambil album ID dari URL jika tersedia
+      if(isset($_GET['albumid'])) {
+          $albumid = $_GET['albumid'];
+
+          // Lakukan sanitasi pada variabel albumid untuk mencegah SQL injection
+          $albumid = mysqli_real_escape_string($koneksi, $albumid);
+
+          // Query SQL untuk mengambil foto dari album yang dipilih
+          $query = mysqli_query($koneksi, "SELECT * FROM foto WHERE userid ='$userid' AND albumid='$albumid'");
+      }
     ?>
   <!-- End SessionProcess Album Card -->
 
@@ -182,34 +193,53 @@
     <a href="tambahfoto.php?albumid=<?php echo $_GET['albumid'];?>"><button class="add-foto">Tambah Foto</button></a>
     <!-- End  Add Album  -->
 
-   <!-- ======= Gallery Section ======= -->
-<section id="gallery" class="gallery">
+<!-- ======= Gallery Section ======= -->
+<section id="gallery" class="gallery mb-5">
   <div class="container-fluid">
-    <div class="row gy-4 justify-content-center">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 gy-4">
       <?php
-        $query = mysqli_query($koneksi, "SELECT * FROM foto WHERE userid ='$userid'");
-        while($data = mysqli_fetch_array($query)){
-          // Ambil foto dari hasil query pertama
-          $foto = $data['lokasifile'];
+        // Periksa apakah query telah dilakukan sebelumnya
+        if(isset($query)) {
+            // Lakukan loop untuk menampilkan setiap foto
+            $count = 0; // Variabel untuk menghitung jumlah foto yang ditampilkan
+            while($data = mysqli_fetch_array($query)){
+                // Ambil foto dari hasil query
+                $foto = $data['lokasifile'];
       ?>
 
-      <div class="col-xl-3 col-lg-4 col-md-6">
+      <div class="col mb-4"> <!-- Tambahkan kelas mb-4 untuk memberikan margin-bottom -->
         <div class="gallery-item h-100">
-          <img src="./assets/img/foto/<?php echo $foto; ?>" class="img-fluid h-100" alt="foto name....">
+          <img src="./assets/img/foto/<?php echo $foto; ?>" class="img-fluid" alt="foto name....">
           <div class="gallery-links d-flex align-items-center justify-content-center">
             <a class="cta-btn" href="detailfoto.php?fotoid=<?php echo $data['fotoid']; ?>">Lihat Detail Foto</a>
           </div>
+          <h5 class="text-center mt-3"><?php echo $data['judulfoto']; ?></h5>
         </div>
       </div><!-- End Gallery Item -->
-      <?php } ?>
+
+      <?php 
+                $count++; // Menambahkan jumlah foto yang ditampilkan
+                // Jika jumlah foto yang ditampilkan sudah mencapai 4, maka tutup baris dan buka baris baru
+                if ($count % 4 == 0) {
+                    echo '</div><div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 gy-4">';
+                }
+            }
+        } else {
+            echo "Album ID tidak tersedia atau user belum login";
+        }
+      ?>
     </div>
   </div>
 </section><!-- End Gallery Section -->
 
 
+
+
+
+
    
 
-  </main><!-- End #main -->
+  </main> <!-- End #main -->
 
   <!-- ======= Footer ======= -->
   <footer id="footer" class="footer">
